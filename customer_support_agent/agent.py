@@ -1,3 +1,10 @@
+"""
+Professional customer support agent with structured instructions.
+Demonstrates ADK best practices for instruction writing.
+
+Reference: https://google.github.io/adk-docs/agents/llm-agents/
+"""
+
 from google.adk.agents.llm_agent import Agent
 
 root_agent = Agent(
