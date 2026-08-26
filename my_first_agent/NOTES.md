@@ -48,6 +48,7 @@
             - Keeps API keys out of code, automatically loaded by ADK, never committed to Git
         - __init__.py -> Package initialization
             - Makes your folder a Python package, imports your agent module, Required for ADK to discover agents.
+
 ## Step 3 - Verify setup
 1. Start ADK web interface
     - adk web
