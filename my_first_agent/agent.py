@@ -1,7 +1,7 @@
 from google.adk.agents.llm_agent import Agent
 
 root_agent = Agent(
-    # Model (required): The reasoning engine)
+    # Model (required): The reasoning engine
     model='gemini-3.6-flash',
     # Name (required) - Identity: Required identifier
     name='math_tutor_agent',
