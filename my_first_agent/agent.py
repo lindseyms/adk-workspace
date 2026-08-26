@@ -2,7 +2,7 @@ from google.adk.agents.llm_agent import Agent
 
 root_agent = Agent(
     # Model (required): The reasoning engine)
-    model='gemini-2.5-flash',
+    model='gemini-3.6-flash',
     # Name (required) - Identity: Required identifier
     name='math_tutor_agent',
     # Purpose: What it does - used by other internal agents to determine how to interact with it
