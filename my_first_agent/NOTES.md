@@ -53,6 +53,18 @@
 1. Start ADK web interface
     - adk web
 2. Navigate to http://localhost:8000
+ -- OR --
+1. Run the agent from the command line
+    - adk run /path_to_agent
+        - Good for:
+            - Quick testing during development
+            - Command-line workflows
+            - Server environment without GUI
+            - Automated testing scripts
+            - CI/CD pipelines
+        - Not for:
+            - Presenting to stakeholders (use adk web instead)
+            - Debugging complex conversations (use adk web instead)
 
 ## The development workflow
 1. Edit agent.py - Define your agent's behavior
