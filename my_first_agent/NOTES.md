@@ -60,3 +60,51 @@
 3. Iterate - Make changes, refresh, and test again
 
 ## Step 4 - Define your agent's identity
+### 4 core paramerters
+1. model (required)
+    - underlying LLM that powers your agent's reasoning and decision-making
+    - what it does
+        - determines your agent's intelligence and capabilities
+        - affects cost per request and response speed
+        - different models have different strengths
+2. name (required)
+    - a unique string identifier for your agent
+        - e.g. name='root_agent'
+    - what it does
+        - identifies your agent internally within ADK
+        - Critcal in multi-agent systems where agents refer to each other
+        - used for logging debugging, and agent delegation
+    - naming conventions
+        - use lowercase with underscores
+        - be descriptive: data_analysis_agent, math_tutor_agent
+        - avoid reserved names: user
+        - dont use camelCase: use my_agent not myAgent
+3. description (optional, recommended for multi-agent) - Helps other agents understand what it is
+    - a concise summary of what your agent does
+        - e.g. description='Answers user questions about the capital city of a given country.'
+    - What this does:
+        - used by other agents to deciside if they should route tasks to this agent
+        - *helps in multi-agent systems where agents delegate to each other* - You should probably just add it
+        - not used by the agent itself for its own behavior
+    - Good description examples:
+        - "Handles customer billing inquiries and processes payment updates"
+        - "Analyzes sales data and generates weekly performance reports"
+        - "Helps students learn algebra by guiding them through problem solving steps"
+    - Bad description examples:
+        - "Billing agent" (too vague)
+        - "Helper" (not specific enough)
+4. instruction (critical, but optional) - helps this agent understand what it is/its responsibilities
+    - The behavioral blueprint that guides how your agent acts and responds
+        - e.g. instruction="""You are a helpful assistant that tells the current time in cities. Use the 'get_current_time' tool for this purpose."""
+    - What it does:
+        - defines tha agent's personality and communication style
+        - specifies the agent's core task or goal
+        - sets boundaries and constraints on behavior
+        - guides when and how to use tools
+        - shapes the output format
+        - *The most critical parameter for shaping an LlmAgent's behavior*
+    - Tips for effective instructions
+        - Be clear and specific: avoid ambiguity, clearly state the desired actions and outcomes
+        - use markdown: improve readability for complex instructions using headings, lists, etc.
+        - provide examples (few-shot): For complex tasks or specific output formats, include examples
+        - Guide tool use: dont just list tools, explain when and why the agent should use them.
