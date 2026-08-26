@@ -120,6 +120,7 @@
         - use markdown: improve readability for complex instructions using headings, lists, etc.
         - provide examples (few-shot): For complex tasks or specific output formats, include examples
         - Guide tool use: dont just list tools, explain when and why the agent should use them.
+        - See customer_support_agent for example of well defined instructions!
 
 ### The root agent
     - ADK command line tools look for a python variable named root_agent as the *entry point* to your agent system. This is a convention that allows ADK to discover and run your agent. (The name parameter can be something else. This is used by the ADK internally)
