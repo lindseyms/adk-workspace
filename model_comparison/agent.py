@@ -36,7 +36,7 @@ factual_agent = Agent(
 # Agent 2: Optimized for Creative Brainstorming
 # Uses high temperature for creativity, Pro model for better ideas
 creative_agent = Agent(
-    model="gemini-3.5-pro",  # Pro model for superior creativity
+    model="gemini-3.1-pro-preview",  # Pro model for superior creativity
     name="creative_brainstormer",
     description="Generates creative ideas and explores possibilities",
     instruction="""You are a creative brainstorming partner.
@@ -61,6 +61,5 @@ creative_agent = Agent(
     )
 )
 
-# For adk web, we'll use the factual agent as root_agent
 # Switch to creative_agent to test different behavior
-root_agent = factual_agent
+root_agent = creative_agent
