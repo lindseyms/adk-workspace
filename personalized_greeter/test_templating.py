@@ -27,7 +27,7 @@ runner = Runner(
 print("=== Test 1: No state set (all defaults) ===")
 result1 = runner.run(
     user_id="user1",
-    session="session1",
+    session_id="session1",
     new_message=Content(parts=[Part(text="Hello")])
 )
 
@@ -40,7 +40,7 @@ print("=== Test 2: State user name only ===")
 session.state["user_name"] = "Alex"
 result2 = runner.run(
     user_id="user1",
-    session="session1",
+    session_id="session1",
     new_message=Content(parts=[Part(text="Hello again")])
 )
 
@@ -56,7 +56,7 @@ session.state["membership_tier"] = "premium"
 
 result3 = runner.run(
     user_id="user1",
-    session="session1",
+    session_id="session1",
     new_message=Content(parts=[Part(text="Hola de nuevo")])
 )
 
