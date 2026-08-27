@@ -33,9 +33,34 @@ factual_agent = Agent(
     )
 )
 
-root_agent = Agent(
-    model='<FILL_IN_MODEL>',
-    name='root_agent',
-    description='A helpful assistant for user questions.',
-    instruction='Answer user questions to the best of your knowledge',
+# Agent 2: Optimized for Creative Brainstorming
+# Uses high temperature for creativity, Pro model for better ideas
+creative_agent = Agent(
+    model="gemini-3.5-pro",  # Pro model for superior creativity
+    name="creative_brainstormer",
+    description="Generates creative ideas and explores possibilities",
+    instruction="""You are a creative brainstorming partner.
+
+    Generate innovative, diverse, and imaginative ideas. Feel free to:
+    - Think outside the box
+    - Combine unexpected concepts
+    - Explore unconventional approaches
+
+    Be creative, varied, and thought-provoking.""",
+    generate_content_config=types.GenerateContentConfig(
+        temperature=0.9,  # High temperature for creativity
+        max_output_tokens=2000, # Allow detailed ideas
+        top_p=0.95,
+        top_k=40,
+        safety_settings=[
+            types.SafetySetting(
+                category=types.HarmCategory.HARM_CATEGORY_DANGEROUS_CONTENT,
+                threshold=types.HarmBlockThreshold.BLOCK_MEDIUM_AND_ABOVE
+            )
+        ]
+    )
 )
+
+# For adk web, we'll use the factual agent as root_agent
+# Switch to creative_agent to test different behavior
+root_agent = factual_agent
