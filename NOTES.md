@@ -135,7 +135,7 @@
     - Tips:
         - Add descriptions to your pydantic fields. The LLM uses these to understand what the fields represent
         - The schema defines the EXACT output structure. The LLM will ONLY include fields you define in your Pydantic BaseModel. If you need nested objects like metadata, errors, or pagination in your output, you must explicitly define them all in the schema as you would any other field.
-2. output_key: used to store the result of output_schema in the session state
+2. output_key: used to store the result of output_schema in the session state. useful for passing data between agents, simple value extraction.
 3. generate_content_config: Pass an instance of google.genai.types.GenerateContentConfig to control parameters like temperature (randomness), max_output_tokens (response length), top_p, top_k, and safety settings
     - Parameters:
         - **Temperature**: controls randomness in model output

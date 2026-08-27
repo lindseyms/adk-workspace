@@ -4,12 +4,12 @@ Demonstrates ADK's BuiltInPlanner with ThinkingConfig.
 """
 
 from google.adk.agents.llm_agent import Agent
-from google.adk.agents.planners import BuiltInPlanner
-from google.adk.agents.thinking import ThinkingConfig
+from google.adk.planners import BuiltInPlanner
+from google.genai import types
 
 #Planning-enabled agent for complex problem solving
 root_agent = Agent(
-    model='gemini-3.5-flash',
+    model='gemini-3.6-flash',
     name='strategic_problem_solver',
     description='Solves complex problems using multi-step reasoning and planning',
     instruction="""You are a Strategic Problem Solver.
@@ -28,7 +28,7 @@ For complex problems:
 
 Be thorough, analytical, and systematic in your approach.""",
     planner=BuiltInPlanner(
-        thinking_config=ThinkingConfig(
+        thinking_config=types.ThinkingConfig(
             include_thoughts=True,  # Show reasoning process
             thinking_budget=2048  # Large budget for complex thinking
         )
