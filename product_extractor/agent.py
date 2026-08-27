@@ -15,7 +15,7 @@ class ProductInfo(BaseModel):
 
 # Step 2: Create agent with output_schema
 root_agent = Agent(
-    model='gemini-3.6-flash',
+    model='gemini-3.5-flash',
     name='root_agent',
     description='Extracts product information from user messages and returns structured JSON',
     instruction="""You are a Product Information Extractor.
