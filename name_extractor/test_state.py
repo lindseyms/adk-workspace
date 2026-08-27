@@ -4,6 +4,8 @@ directly.
 Run with: python test_state.py
 """
 
+import asyncio
+
 from agent import root_agent
 from google.adk.runners import Runner
 from google.adk.sessions import InMemorySessionService
@@ -11,11 +13,11 @@ from google.genai.types import Content, Part
 
 # Setup session and runner
 session_service = InMemorySessionService()
-session = session_service.create_session(
+session = asyncio.run(session_service.create_session(
     app_name="name_extractor_app",
     user_id="test_user",
     session_id="test_session"
-)
+))
 
 runner = Runner (
     agent=root_agent,
@@ -39,6 +41,12 @@ for event in result:
         print(f"\nAgent response: {event.content.parts[0].text}")
 
 # Access state programmatically
+session = asyncio.run(session_service.get_session(
+    app_name="name_extractor_app",
+    user_id="test_user",
+    session_id="test_session"
+))
+
 print(f"\n === State after execution ===")
 print(f"Full state: {session.state}")
 print(f"Extracted name: {session.state.get('user_name')}")
@@ -61,6 +69,12 @@ result2 = runner.run(
 for event in result2:
     if event.is_final_response():
         print(f"Agent response: {event.content.parts[0].text}")
+
+session = asyncio.run(session_service.get_session(
+    app_name="name_extractor_app",
+    user_id="test_user",
+    session_id="test_session"
+))
 
 print(f"\nState still contains: {session.state.get('user_name')}")
 print("State persists across turns!")
