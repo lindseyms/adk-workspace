@@ -36,6 +36,6 @@ root_agent = Agent(
     - storage must include unit (GB, TB)
     - If color not mentioned, use "Not specified"
     - Output ONLY the JSON, no explanation text""",
-    output_schema=ProductInfo, #E nforce this exact structure
+    output_schema=ProductInfo, #Enforce this exact structure
     output_key="extracted_product"  # Store result in session state
 )
