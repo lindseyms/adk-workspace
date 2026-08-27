@@ -13,9 +13,29 @@ class ProductInfo(BaseModel):
     storage: str = Field(description="Storage capacity (e.g., '256GB')")
     color: str = Field(default="Not specified", description="Product color if mentioned")
 
+# Step 2: Create agent with output_schema
 root_agent = Agent(
     model='gemini-3.6-flash',
     name='root_agent',
-    description='A helpful assistant for user questions.',
-    instruction='Answer user questions to the best of your knowledge',
+    description='Extracts product information from user messages and returns structured JSON',
+    instruction="""You are a Product Information Extractor.
+
+    Your task:
+    - Read the user's message about a product
+    - Extract: product_name, price, storage, and color (if mentioned)
+    - Respond ONLY with valid JSON matching this format:
+      {
+          "product_name": "product name here",
+          "price": 999.99,
+          "storage": "256GB",
+          "color": "Space Black"
+      }
+
+    Rules:
+    - Price must be a number (no dollar signs)
+    - storage must include unit (GB, TB)
+    - If color not mentioned, use "Not specified"
+    - Output ONLY the JSON, no explanation text""",
+    output_schema=ProductInfo, #E nforce this exact structure
+    output_key="extracted_product"  # Store result in session state
 )
