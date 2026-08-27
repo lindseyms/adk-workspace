@@ -211,3 +211,16 @@
     - **Without planning, agents struggle with multi-step reasoning**
 - Planning vs multi-agent
     - Use planning when a single agent needs to reason through multiple steps or trade-ffs within their domain. Use multiple agents when the problem requires distinct specialized skills that should be divided among separate agents.
+
+## Session State
+- A collection (dict or map) holding key-value pairs.
+- Used to allow your code to check values/make programmatic decisions based on conversation data such as:
+    - Personalize interaction: Remember user preferences mentioned earlier (e.g., 'user_preference_theme': 'dark')
+    - Track task progress: keep tabs on steps in a multi-turn process (e.g. 'booking_step': 'confirm_payment')
+    - accumulate information: Build lists or summaries (e.g., 'shopping_cart_items': ['book', 'pen'])
+    - Make informed decisions: Store flags or values influencing the next response (e.g., 'user_is_authenticated': True)
+- accessible through session.state attribute
+- Do not use this for only providing contet to LLM (conversation history does this already)
+- Save responses with output_key in the agent definition
+- **Example**: name_extractor
+
