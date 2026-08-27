@@ -223,4 +223,19 @@
 - Do not use this for only providing contet to LLM (conversation history does this already)
 - Save responses with output_key in the agent definition
 - **Example**: name_extractor
+- Common pattern
+    1) Agent saves to state with output_key
+        ```python
+        agent=Agent(..., output_key="result")
+        ```
+    2) Run agent
+        ```python
+        runner.run(...)
+        ```
+    3) Access state programmatically
+        ```python
+        if session.state.get("result"):
+            # Make decisions based on state
+            pass
+        ```
 
