@@ -240,4 +240,23 @@
         ```
 - Templating can also be used to pass information in to the instructions to make instructions dynamic.
     - **Example**: personalized_greeter
+    - Optional syntax prevents errors:
+        - {var} -> Errors if missing (Strict mode)
+        - {var?} -> Empty if missing (Optional mode)
+        - {var?default} -> Uses default text if missing
+        - {var?Conditional text} -> Shows text only if var exists
+    - Common Pattern
+        1) State is ste (from previous turn or external data)
+            ```python
+            session.state["user_name"] = "Alex"
+            ```
+        2) Agent uses templating
+            ```python
+            agent=Agent(
+                ...,
+                instruction="Hello {user_name?there}"
+            )
+            ```
+        3) Instruction resolves automatically
+            - LLM receives: "Hello Alex"
 
