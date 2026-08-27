@@ -135,6 +135,23 @@
     - Tips:
         - Add descriptions to your pydantic fields. The LLM uses these to understand what the fields represent
         - The schema defines the EXACT output structure. The LLM will ONLY include fields you define in your Pydantic BaseModel. If you need nested objects like metadata, errors, or pagination in your output, you must explicitly define them all in the schema as you would any other field.
+2. output_key: used to store the result of output_schema in the session state
+3. generate_content_config: Pass an instance of google.genai.types.GenerateContentConfig to control parameters like temperature (randomness), max_output_tokens (response length), top_p, top_k, and safety settings
+    - **Temperature**: controls randomness in model output
+        - Low temperature (0.0-0.3) - deterministic. Use for data extraction, etc.
+        - Medium temperature (0.4-0.7) - balanced. Use for customer support, tutoring, general conversations
+        - High temperature (0.8-1.0) - creative. Use for: creative writing, brainstorming, marketing copy
+    - **Safety settings**: configure content filtering thresholds for Gemini models
+        - Safety thresholds
+            - BLOCK_NONE - No filtering (not recommended in prod)
+            - BLOCK_ONLY_HIGH - Block only high-probablity harmful content
+            - BLOCK_MEDIUM_AND_ABOVE - Block medium and high probablity
+            - BLOCK_LOW_AND_ABOVE - Most strict, blocks even low probablity
+    - **Output tokens and sampling**: control response length and diversity
+        - max_output_tokens: Maximum response length (defualt varies by model)
+        - top_p: Nucleus sampling -- consider tokens comprising top P% of probablity
+        - top_k: Only sample from the K most likely next tokens
+    - **Example**: See model_comparison 
         
 ### The root agent
 - ADK command line tools look for a python variable named root_agent as the *entry point* to your agent system. This is a convention that allows ADK to discover and run your agent. (The name parameter can be something else. This is used by the ADK internally)
@@ -145,3 +162,18 @@
     - No safety thresholds configured
     - No token limits set
     - Same settings for all tasks (creative writing vs. data extraction)
+
+### Choosing the correct model
+- Gemini 2.5 Pro
+    - start here for prototyping and establishing quality baselines
+    - excellent reasoning for complex analysis and quality-critical tasks
+    - 2M token context window for larger inputs
+    - Best for initial development and evaluation
+- Gemini 2.5 Flash
+    - Switch to this model after initial prototyping. Cost and speed are improved.
+    - ~2x faster response times
+    - ~10x cheaper than pro
+    - 1M token context window
+    - Good reasoning for most straightforward tasks
+    - Ideal for high-volume production workloads
+    - Tip: Always perform gap analysis after switching from Pro to Flash to ensure Flash meets your quality requirements
