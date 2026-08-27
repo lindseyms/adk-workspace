@@ -131,9 +131,11 @@
 1. output_schema: Define a schema representing the desired agent output structure (pydantic). If set, the agent's final response must be a JSON string conforming to this schema
     - See an example in product_extractor
     - Use this if you dont want the response to be free form text
+    - You MUST provide guidance in your agent instructions on the expected JSON format and structure, even though you provided the class definition in the output_schema arguemnt in the agent definition.
     - Tips:
         - Add descriptions to your pydantic fields. The LLM uses these to understand what the fields represent
         - The schema defines the EXACT output structure. The LLM will ONLY include fields you define in your Pydantic BaseModel. If you need nested objects like metadata, errors, or pagination in your output, you must explicitly define them all in the schema as you would any other field.
+        
 
 ### The root agent
     - ADK command line tools look for a python variable named root_agent as the *entry point* to your agent system. This is a convention that allows ADK to discover and run your agent. (The name parameter can be something else. This is used by the ADK internally)
