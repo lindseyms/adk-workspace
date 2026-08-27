@@ -137,21 +137,42 @@
         - The schema defines the EXACT output structure. The LLM will ONLY include fields you define in your Pydantic BaseModel. If you need nested objects like metadata, errors, or pagination in your output, you must explicitly define them all in the schema as you would any other field.
 2. output_key: used to store the result of output_schema in the session state
 3. generate_content_config: Pass an instance of google.genai.types.GenerateContentConfig to control parameters like temperature (randomness), max_output_tokens (response length), top_p, top_k, and safety settings
-    - **Temperature**: controls randomness in model output
-        - Low temperature (0.0-0.3) - deterministic. Use for data extraction, etc.
-        - Medium temperature (0.4-0.7) - balanced. Use for customer support, tutoring, general conversations
-        - High temperature (0.8-1.0) - creative. Use for: creative writing, brainstorming, marketing copy
-    - **Safety settings**: configure content filtering thresholds for Gemini models
-        - Safety thresholds
-            - BLOCK_NONE - No filtering (not recommended in prod)
-            - BLOCK_ONLY_HIGH - Block only high-probablity harmful content
-            - BLOCK_MEDIUM_AND_ABOVE - Block medium and high probablity
-            - BLOCK_LOW_AND_ABOVE - Most strict, blocks even low probablity
-    - **Output tokens and sampling**: control response length and diversity
-        - max_output_tokens: Maximum response length (defualt varies by model)
-        - top_p: Nucleus sampling -- consider tokens comprising top P% of probablity
-        - top_k: Only sample from the K most likely next tokens
+    - Parameters:
+        - **Temperature**: controls randomness in model output
+            - Low temperature (0.0-0.3) - deterministic. Use for data extraction, etc.
+            - Medium temperature (0.4-0.7) - balanced. Use for customer support, tutoring, general conversations
+            - High temperature (0.8-1.0) - creative. Use for: creative writing, brainstorming, marketing copy
+        - **Safety settings**: configure content filtering thresholds for Gemini models
+            - Safety thresholds
+                - BLOCK_NONE - No filtering (not recommended in prod)
+                - BLOCK_ONLY_HIGH - Block only high-probablity harmful content
+                - BLOCK_MEDIUM_AND_ABOVE - Block medium and high probablity
+                - BLOCK_LOW_AND_ABOVE - Most strict, blocks even low probablity
+        - **Output tokens and sampling**: control response length and diversity
+            - max_output_tokens: Maximum response length (defualt varies by model)
+            - top_p: Nucleus sampling -- consider tokens comprising top P% of probablity
+            - top_k: Only sample from the K most likely next tokens
     - **Example**: See model_comparison 
+4. planner: Assign a BasePlanner instance to enable multi-step reasoning and planning before execution. BuiltInPlanner: Leverages the model's built-in planning capabilities (e.g., Gemini's thinking feature)
+    - Parameters
+        - **thinking_budget**: determines how deeply the model can think. Guides model on number of thinking tokens to use when generating a response.
+            - Higher values (e.g. 2048) allow more thorough analysis for complex problems.
+            - Lower values (e.g. 512) are faster for simpler tasks
+        - **include_thoughts**: lets you see (and debug) the reasoning process. Controls whether the model should include raw thoughts and internal reasoning process in the response.
+    - Choosing b/n planners
+        - BuiltInPlanner (recommended for Gemini models)
+            - leverages the model's native thinking capabilities
+            - best for
+                - Gemini models with built in thinking support
+                - Transparent reasoning: see internal though process with include_thoughts=True
+                - flexible control: adjust reasoning depth with thinking_budget
+        - PlanReActPlanner (For non-gemini models)
+            - best for
+                - Non-Gemini models, and/or models without native thinking capabilites
+                - structured output format: Enforces Planning -> Action -> reasoning -> Final answer
+                - tool heavy workflows: explicit action/reasoning phases work well with tool calls
+                - enforcing systematic approach: when you need guaranteed output structure
+    - **Example**: See problem_solver
         
 ### The root agent
 - ADK command line tools look for a python variable named root_agent as the *entry point* to your agent system. This is a convention that allows ADK to discover and run your agent. (The name parameter can be something else. This is used by the ADK internally)
@@ -177,3 +198,16 @@
     - Good reasoning for most straightforward tasks
     - Ideal for high-volume production workloads
     - Tip: Always perform gap analysis after switching from Pro to Flash to ensure Flash meets your quality requirements
+
+## Reactive vs Thoughtful Agents
+- Use reactive agents (agents that respond quickly) for simple problems that don't need planning
+    - Direct factual questions ("What is the capital of France?")
+    - Single calculations ("Convert 100 USD to EUR")
+    - Straightforward tasks ("Greet the user warmly")
+- Use thoughtful agents (agents that respond slowly and plan) for complex problems that require multiple considerations, trade-off analysis, or sequential reasoning:
+    - Business strategy ("How can i reduce cloud costs by 30% without impacting performance?" - Requires analyzing cost drivers, perf requirements, and creating a phased approach)
+    - Technical decisions ("Should I use microservices or monolithic architecture for my startup MVP?" - Requires weighing trade-offs: speed vs. scalability, team size, future growth)
+    - Multi-step planning ("Plan a 2-week Japan trip for a family of 4 on a budget of $5000" - Requires coordinating flights, hotels, activities, meals--all within budget constraints)
+    - **Without planning, agents struggle with multi-step reasoning**
+- Planning vs multi-agent
+    - Use planning when a single agent needs to reason through multiple steps or trade-ffs within their domain. Use multiple agents when the problem requires distinct specialized skills that should be divided among separate agents.
