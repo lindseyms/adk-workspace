@@ -238,4 +238,6 @@
             # Make decisions based on state
             pass
         ```
+- Templating can also be used to pass information in to the instructions to make instructions dynamic.
+    - **Example**: personalized_greeter
 
