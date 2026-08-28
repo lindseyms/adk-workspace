@@ -328,7 +328,7 @@
                     display_html(response.rendered_content)
                 ```
     - Code Execution: execute python code safely
-        - **Example**: See 
+        - **Example**: See math_assistant
     - vertex AI search: Search enterprie documents
     - Vertex AI RAG engine: Retrieval-augmented generation
     - BigQuery: Query data warehouses
