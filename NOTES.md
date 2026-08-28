@@ -301,18 +301,43 @@
     - Function tools: Tools created by you
     - Built-in tools: Ready to use tools provided by the framework for common tasks (Google Search, Code Execution, Retrieval Augemented Generation (RAG))
     - Third-Party tools: Integrate tools seamlessly from popular external libraries.
-- Function name, docstring, and params guide LLM decision on which tool to use
-- **Example**: geography_assistant
+- Function tools (custom tools)
+    - Function name, docstring, and params guide LLM decision on which tool to use
+    - **Custom Tool Example**: geography_assistant
+    - Best practices:
+    - Descriptive function names
+    - Clear docstrings - explain what the tool does and when to use it
+    - Type hints - Help ADK generate proper schema for the LLM
+    - Simple return values - Start with basic types before complex structures
+- Built-in tools
+    - Google Search: Web serach with grounding
+        - provides:
+            - Real-time web search results
+            - Authoritative, up-to-date info
+            - Automatic grounding of responses in sources
+            - Search suggestions (must be displayed per policy)
+        - Grounding:
+            - Connects agent responses to authoritative sources, reducing hallucinations and improving accuracy. Agent bases answers on current, verifiable info
+            - When using google Search grounding, you MUST display search suggestions (renderedContent) in your application UI. Mandatory per Google Search usage policy
+                ```python
+                # In your application code (not agent.py)
+                response = runner.run(...)
+                if hasattr(response, 'rendered_content') and response.rendered_content:
+                    display_html(response.rendered_content)
+                ```
+
+    - Code Execution: execute python code safely
+    - vertex AI search: Search enterprie documents
+    - Vertex AI RAG engine: Retrieval-augmented generation
+    - BigQuery: Query data warehouses
+    - Spanner: Query Spanner Databases
+    - Bigtable: Query Bigtable databases
+
 - Agent behavior:
     - Tools are only called when needed. Agent uses reasoning to determine tool necessity. Not every query requires a tool.
     - Tools are optional - agnets call tools only when reasoning determines them necessary
     - multiple calls possible - agents can call the same tool multiple times
     - Error handling - tools should return clear error messages for failure cases
-- Best practices:
-    - Descriptive function names
-    - Clear docstrings - explain what the tool does and when to use it
-    - Type hints - Help ADK generate proper schema for the LLM
-    - Simple return values - Start with basic types before complex structures
 
 # Todo
 1) Look up ADK agent loop and understand this
