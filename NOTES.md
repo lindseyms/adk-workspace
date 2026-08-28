@@ -173,6 +173,12 @@
                 - tool heavy workflows: explicit action/reasoning phases work well with tool calls
                 - enforcing systematic approach: when you need guaranteed output structure
     - **Example**: See problem_solver
+5. tools: provide a list of tools the agent can use.
+    - Each item in the list can be:
+        - A native function or method (wrapped as a FunctionTool)
+            - ADK automatically wraps Python functions as FunctionTool
+        - An instance of a class inheriting from BaseTool
+        - An instance of another agent (AgentTool)
         
 ### The root agent
 - ADK command line tools look for a python variable named root_agent as the *entry point* to your agent system. This is a convention that allows ADK to discover and run your agent. (The name parameter can be something else. This is used by the ADK internally)
@@ -260,3 +266,40 @@
         3) Instruction resolves automatically
             - LLM receives: "Hello Alex"
 
+## Tools
+- LLM handles reasoning and decision making. Tools handle action and data retrieval
+- Tools enable
+    - Access real-time info: web search, weather APIs, stock prices
+    - perform calculations: execute code, run financial models, process data
+    - query databases: retrieve customer orders, product inventory, user profiles
+    - interact with external systems: send emails, book appts, process payments
+    - take actions in the world: update records, trigger workflows, control devices
+- The process
+    1) Reasoning: The agent's LLM analyzes its system instruction, conversation hisotry and user request
+    2) Selection: Based on the analysis, the LLM decides on which tool, if any, to execute, based on the tools available to the agent and the docstrings that describe each tool
+    3) Invocation: The LLM generates the required arguments (inputs) for the selected tool and triggers its execution
+    4) Observation: The agent receives the output (result) returned by the tool
+    5) Finalization: The agent incorporates the tool's output into its ongoing reasoning process to formulate the next repsonse, decide on subsequent step, ir determine if the goal has been acheived.
+    - **example**
+        - User asks "What's the weather in Paris?"
+            |
+            v
+        - Step 1 - Reasoning: Agent analyzes: "User needs current weather data for Paris"
+            |
+            V
+        - Step 2 - Selection: Agent decides: "get_weather tool matches this need"
+            |
+            V
+        - Step 3 - Invocation: Agent calls: get_weather(city="Paris")
+            |
+            V
+        - Step 4 - Observation: Tool returns: {"status": "success", "report": "Paris is sunny, 20 C"}
+            |
+            V
+        - Step 5 - Finalization: Agent responds: "The current weather in Paris is sunny with a temperature of 20 C"
+- Tool types in ADK
+    - Function tools: Tools created by you
+    - Built-in tools: Ready to use tools provided by the framework for common tasks (Google Search, Code Execution, Retrieval Augemented Generation (RAG))
+    - Third-Party tools: Integrate tools seamlessly from popular external libraries.
+- Function name, docstring, and params guide LLM decision on which tool to use
+- **Example**: geography_assistant
