@@ -312,6 +312,7 @@
     - Simple return values - Start with basic types before complex structures
 - Built-in tools
     - Google Search: Web serach with grounding
+        - **Example**: See research_assistant
         - provides:
             - Real-time web search results
             - Authoritative, up-to-date info
@@ -327,6 +328,7 @@
                     display_html(response.rendered_content)
                 ```
     - Code Execution: execute python code safely
+        - **Example**: See 
     - vertex AI search: Search enterprie documents
     - Vertex AI RAG engine: Retrieval-augmented generation
     - BigQuery: Query data warehouses
