@@ -179,6 +179,7 @@
             - ADK automatically wraps Python functions as FunctionTool
         - An instance of a class inheriting from BaseTool
         - An instance of another agent (AgentTool)
+6. code_executor: allows you to use BuiltInCodeExecutor() (a built in tool). You dont list BuiltInCodeExecutor in the list of tools
         
 ### The root agent
 - ADK command line tools look for a python variable named root_agent as the *entry point* to your agent system. This is a convention that allows ADK to discover and run your agent. (The name parameter can be something else. This is used by the ADK internally)
@@ -325,7 +326,6 @@
                 if hasattr(response, 'rendered_content') and response.rendered_content:
                     display_html(response.rendered_content)
                 ```
-
     - Code Execution: execute python code safely
     - vertex AI search: Search enterprie documents
     - Vertex AI RAG engine: Retrieval-augmented generation
