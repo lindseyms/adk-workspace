@@ -2,6 +2,7 @@
 Test state namespaces to see persistence differences.
 Run with: python test_namespaces.py
 """
+import asyncio
 
 from agent import root_agent
 from google.adk.runners import Runner
@@ -10,11 +11,11 @@ from google.genai.types import Content, Part
 
 # Setup
 session_service = InMemorySessionService()
-session = session_service.create_session(
+session = asyncio.run(session_service.create_session(
     app_name="namespace_demo_app",
     user_id="user1",
     session_id="session1"
-)
+))
 
 runner = Runner(
     agent=root_agent,
@@ -73,11 +74,11 @@ print(f"user:theme: {session.state.get('user:theme')}") # Still here (user state
 
 # Simulate new session
 print("\n=== Simulating NEW Session (session2)===")
-session2 = session_service.create_session(
+session2 = asyncio.run(session_service.create_session(
     app_name="namespace_demo_app",
     user_id="user1", # Same user
     session_id="session2" # Different session
-)
+))
 
 print(f"New session state: {session2.state}")
 print(f"topic: {session2.state.get('topic')}") # Should be GONE (session-scoped)
