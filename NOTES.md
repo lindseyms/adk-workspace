@@ -279,7 +279,7 @@
     2) Selection: Based on the analysis, the LLM decides on which tool, if any, to execute, based on the tools available to the agent and the docstrings that describe each tool
     3) Invocation: The LLM generates the required arguments (inputs) for the selected tool and triggers its execution
     4) Observation: The agent receives the output (result) returned by the tool
-    5) Finalization: The agent incorporates the tool's output into its ongoing reasoning process to formulate the next repsonse, decide on subsequent step, ir determine if the goal has been acheived.
+    5) Finalization: The agent incorporates the tool's output into its ongoing reasoning process to formulate the next repsonse, decide on subsequent step, or determine if the goal has been acheived.
     - **example**
         - User asks "What's the weather in Paris?"
             |
@@ -303,3 +303,16 @@
     - Third-Party tools: Integrate tools seamlessly from popular external libraries.
 - Function name, docstring, and params guide LLM decision on which tool to use
 - **Example**: geography_assistant
+- Agent behavior:
+    - Tools are only called when needed. Agent uses reasoning to determine tool necessity. Not every query requires a tool.
+    - Tools are optional - agnets call tools only when reasoning determines them necessary
+    - multiple calls possible - agents can call the same tool multiple times
+    - Error handling - tools should return clear error messages for failure cases
+- Best practices:
+    - Descriptive function names
+    - Clear docstrings - explain what the tool does and when to use it
+    - Type hints - Help ADK generate proper schema for the LLM
+    - Simple return values - Start with basic types before complex structures
+
+# Todo
+1) Look up ADK agent loop and understand this
