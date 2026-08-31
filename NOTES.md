@@ -355,6 +355,15 @@
                 - Use this for development, testing, single user scenarios
             2. SseConnectionParams (remote servers) - Connects to MCP server running remotely via HTTP
                 - Use for prod deployments, cloud-hosted MCP servers
+                    ```python
+                        from google.adk.tools.mcp_tool.mcp_session_manager import SseConnectionParams
+
+                        # Remote server connection
+                        connection = SseConnectionParams(
+                            url="https://your-mcp-server.example.com/sse",
+                            headers={'Authorization': 'Bearer YOUR_TOKEN'}
+                        )
+                    ```
     2) Exposing ADK tools via MCP: You build an MCP server that wraps your ADK tools, making them accessible to any MCP client
 - How they work
     1) MCP servers expose tools via the standardized MCP protocol
@@ -391,4 +400,3 @@
         - Always use tool_filter in prod!
     - **Example**: See geography_assistant2
     - Make sure to run pip install "google-adk[mcp]" before it will actually let you connect to any MCP servers! pip install "google-adk" does not install mcp related packages by default.
-    - If you're running MCP
