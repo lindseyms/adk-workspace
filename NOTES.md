@@ -434,7 +434,7 @@
 
 # Todo
 1) Look up ADK agent loop and understand this
-2) Look up npx commands - what is this?
+2) Look up integrating agents with APIs - do you build custom tools for this?
 
 # MCP
 - What is it?
