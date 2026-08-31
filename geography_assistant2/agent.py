@@ -42,7 +42,7 @@ root_agent = Agent(
                     server_params=StdioServerParameters(
                         command='npx',
                         args=['-y',
-                        '@modelcontextprotocol/server-filesystem'
+                        '@modelcontextprotocol/server-filesystem',
                         ALLOWED_PATH
                         ],
                     )
