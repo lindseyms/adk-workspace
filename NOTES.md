@@ -301,7 +301,7 @@
 - Tool types in ADK
     - Function tools: Tools created by you
     - Built-in tools: Ready to use tools provided by the framework for common tasks (Google Search, Code Execution, Retrieval Augemented Generation (RAG))
-    - Third-Party tools: Integrate tools seamlessly from popular external libraries.
+    - Third-Party tools: Integrate tools seamlessly from popular external libraries. (see MCP below for more information)
 - Function tools (custom tools)
     - Function name, docstring, and params guide LLM decision on which tool to use
     - **Custom Tool Example**: geography_assistant
