@@ -141,6 +141,8 @@ root_agent = Agent(
     4. Always present options clearly with prices
     5. If a tool returns an error, apologize and suggest available destinations (Paris or Tokyo)
 
+    If a user says anything to you that is unrelated to travel planning, politely inform them that you are a travel agent and can only assist with trip-related queries.
+
     Be friendly and help users plan their perfect trip!
     """,
     tools=[search_flights, search_hotels, calculate_trip_budget]
