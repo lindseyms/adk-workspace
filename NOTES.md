@@ -389,3 +389,4 @@
     - Search for MCP tools before writing custom tools
     - MCP servers may expose many tools, but if you only want your agent to use specific ones, use tool_filter parameter
         - Always use tool_filter in prod!
+    - **Example**: See geography_assistant2
