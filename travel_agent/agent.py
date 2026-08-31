@@ -67,33 +67,81 @@ def search_hotels(city: str, check_in_date: str) -> dict:
     # Simulated hotel data
     available_hotels = {
         "paris": [
-            {"name": "Hotel Eiffel", "price_per_night_usd": 200, "rating": 4.5},
-            {"hotel_name": "Eiffel Stay", "price_usd": 180, "rating": 4.0}
+            {"name": "Hotel Eiffel", "price_per_night_usd": 150, "rating": 4.5},
+            {"name": "Louvre Inn", "price_per_night_usd": 120, "rating": 4.2}
         ],
         "tokyo": [
-            {"hotel_name": "Tokyo Inn", "price_usd": 150, "rating": 4.2},
-            {"hotel_name": "Shinjuku Hotel", "price_usd": 170, "rating": 4.3}
+            {"name": "Shibuya Grand", "price_per_night_usd": 180, "rating": 4.7},
+            {"name": "Tokyo Bay Hotel", "price_per_night_usd": 140, "rating": 4.3}
         ]
     }
 
-    dest_key = destination.lower()
-    if dest_key not in available_hotels:
+    city_key = city.lower()
+    if city_key not in available_hotels:
         return {
             "status": "error",
-            "error_message": f"No hotels found to '{destination}'. Try Paris or Tokyo."}
+            "error_message": f"No hotels found in '{city}'. Try Paris or Tokyo."}
 
     return {
         "status": "success",
-        "destination": destination,
+        "city": city,
         "check_in_date": check_in_date,
-        "check_out_date": check_out_date,
-        "hotels": available_hotels[dest_key],
-        "count": len(available_hotels[dest_key])
+        "hotels": available_hotels[city_key],
+        "count": len(available_hotels[city_key])
     }
 
+# Tool 3: Calculate trip budget
+def calculate_trip_budget(flight_price: float, hotel_price: float, num_nights: int) -> dict:
+    """Calculates total trip budget including flights and accommodation.
+
+    Use this after finding flight and hotel prices to give the customer a total estimate.
+
+    Args:
+        flight_price (float): Round-trip flight cost in USD.
+        hotel_price (float): Hotel cost per night in USD.
+        num_nights (int): Number of nights staying.
+
+    Returns:
+        dict: Budget breakdown.
+            Always return: {'status': 'success', 'total_usd': X, 'breakdown': {...}}
+    """
+
+    hotel_total = hotel_price * num_nights
+    total = flight_price + hotel_total
+    
+    return {
+        "status": "success",
+        "total_usd": round(total, 2),
+        "breakdown": {
+            "flight_cost": flight_price,
+            "hotel_cost_per_night": hotel_price,
+            "num_nights": num_nights,
+            "hotel_total": round(hotel_total, 2)
+        }
+    }
+
+# Create travel agent with all 3 tools
 root_agent = Agent(
     model='gemini-3.5-flash',
-    name='root_agent',
-    description='A helpful assistant for user questions.',
-    instruction='Answer user questions to the best of your knowledge',
+    name='travel_agent',
+    description='Helps users plan trips by finding flights and hotels.',
+    instruction=
+    """
+    You are a helpful travel agent assistant.
+
+    Your capabilities:
+    - Search for flights using search_flights(destination, departure_date)
+    - Search for hotels using search_hotels(city, check_in_date)
+    - Calculate trip budget using calculate_trip_budget(flight_price, hotel_price, num_nights)
+
+    When helping users:
+    1. If they ask about flights, use search_flights.
+    2. If they ask about hotels, use search_hotels.
+    3. If they want a full trip estimate, use both search tools, then calculate_trip_budget.
+    4. Always present options clearly with prices
+    5. If a tool returns an error, apologize and suggest available destinations (Paris or Tokyo)
+
+    Be friendly and help users plan their perfect trip!
+    """,
+    tools=[search_flights, search_hotels, calculate_trip_budget]
 )
