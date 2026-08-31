@@ -304,12 +304,22 @@
     - Third-Party tools: Integrate tools seamlessly from popular external libraries. (see MCP below for more information)
 - Function tools (custom tools)
     - Function name, docstring, and params guide LLM decision on which tool to use
-    - **Custom Tool Examples**: geography_assistant, travel_agent
+    - **Custom Tool Examples**:
+        - geography_assistant
+        - geography_assistant2 (A.K.A travel_agent)
+        - customer_support (customer support agent that handles order inquiries, processes refunds, and escalates complex issues--with compreshensive error handling and strategic tool coordination)
     - Best practices:
-        - Descriptive function names
-        - Clear docstrings - explain what the tool does and when to use it
-        - Type hints - Help ADK generate proper schema for the LLM
-        - Simple return values - Start with basic types before complex structures
+        - Descriptive function names (verb-noun)
+        - Clear docstrings - explain what the tool does and when to use it, strategic instructions (tool usage guidelines, tool selection (when to use which tool), workflows (step-by-step procedures), error handling (what to do for each error type), escalation (when and how to escalate))
+        - Type hints on all parameters - Help ADK generate proper schema for the LLM
+        - Simple return values - Start with basic types before complex structures (dict is best)
+        - returns include "status" key
+        - error messages are user-friendly
+        - instructions reference tools by name
+        - instructions handle success and all error types
+        - sequential workflows are clearly defined
+        - escalation paths specified
+        - Focused, single-purpose tools
     - Core concepts:
         1) Funciton signatures matter - the function signature, including parameter types and return type, is crucial. ADK uses this info to generate the schema that the LLM sees.
             - critical elements:
@@ -399,7 +409,6 @@
                                 "error_message": f"Operation failed: {str(e)}"
                             }
                 ```
-
 
 - Built-in tools
     - Google Search: Web serach with grounding
@@ -491,3 +500,10 @@
         - Always use tool_filter in prod!
     - **Example**: See geography_assistant2
     - Make sure to run pip install "google-adk[mcp]" before it will actually let you connect to any MCP servers! pip install "google-adk" does not install mcp related packages by default.
+
+## Agent as a tool
+- Instead of writing a function tool, you can use another specialized agent as a tool. This allows the main agent to delegate complex subtasks to specialized agents.
+- When to use:
+    - Subtask requires specialized reasoning (not just predefined logic)
+    - Different instructions needed for the subtask
+    - complex workflows within the subtask
