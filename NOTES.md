@@ -304,12 +304,103 @@
     - Third-Party tools: Integrate tools seamlessly from popular external libraries. (see MCP below for more information)
 - Function tools (custom tools)
     - Function name, docstring, and params guide LLM decision on which tool to use
-    - **Custom Tool Example**: geography_assistant
+    - **Custom Tool Examples**: geography_assistant, travel_agent
     - Best practices:
-    - Descriptive function names
-    - Clear docstrings - explain what the tool does and when to use it
-    - Type hints - Help ADK generate proper schema for the LLM
-    - Simple return values - Start with basic types before complex structures
+        - Descriptive function names
+        - Clear docstrings - explain what the tool does and when to use it
+        - Type hints - Help ADK generate proper schema for the LLM
+        - Simple return values - Start with basic types before complex structures
+    - Core concepts:
+        1) Funciton signatures matter - the function signature, including parameter types and return type, is crucial. ADK uses this info to generate the schema that the LLM sees.
+            - critical elements:
+                1. Function signatures matter
+                    1. Function Name (descriptive)
+                        - The LLM uses the function name to understand what the tool does. Use descriptive, verb-noun pattern (e.g. get_shipping_cost, calcuate_loyalty_points, etc.). Not names like process, do_stuff, handler, etc.
+                    2. Type hints (required)
+                        - Type hints tell ADK what types the LLM should provide. Use them on all parameters and the return value, e.g.
+                            ```python
+                                def lookup_order(order_id: str, user_id: int) -> dict:
+                            ```
+                    3. Parameter types
+                        - Use JSON-serializable types that LLMs understand (supported: str, int, float, bool, list, dict; avoid complex custom classes, objects, file handles)
+                    4. Required vs optional parameters - Do not set default values for parameters. Default values may be ignored by the model.
+                2. Docstrings are critical - Used as the tools description and is sent to the LLM. Therefore, a well-written and comprehensive docstring is crucial for the LLM to understand how to use the tool effectively. 
+                    - template:
+                        ```python
+                            """
+                            [One-line summary of what the tool does]
+
+                            [Optional: Additional context about when to use this tool]
+
+                            Args:
+                                param1 (type1): [Description of param1]
+                                param2 (type2): [Description of param2]
+                            
+                            Returns:
+                                dict: [Description of return structure]
+                                    On success: {'status': 'success', 'key': value}
+                                    On error: {'status': 'error', 'error_message': 'explanation'}
+                            """
+                        ```
+                        - with the above template, the LLM sees the tool name, the description, the parameters, and the return type
+                    - LLM uses this to decide
+                        - When to call the tool, what parameters it needs, and what to expect
+                3. Return dictionaries with status - Preferred return type for a Function tool is a dictionary in Python. Highly recommended to use a status key (e.g. 'success', 'error', 'pending') to indicate clearly the outcome of the tool execution for the model.
+                    - e.g.
+                        ```python
+                            # Success case
+                            return {
+                                "status": "success",
+                                "data_key": value,
+                                "another_key": another_value
+                            }
+
+                            # Error case
+                            return {
+                                "status": "error",
+                                "error_message": "Human-readable explanation of what went wrong."
+                            }
+                        ```
+                    - Helps LLM understand if tool succeeded, decide on the next action based on status (continue, retry, apologize), and makes the LLM more reliable due to the consistent format.
+                4. Using state in custom tools (preview)
+                    - You can access ctx in the custom tool to access and modify the session state for context-aware behavior.
+                    - Use this to personalize based on user preferences
+                    - get context from previous tool calls
+                    - Use in multi-step workflows requiring intermediate data
+                        ```python
+                            # Save intermediate results for next tool call
+                            ctx.session.state['temp:calculation_result'] = computed_value
+                        ```
+                    - User-specific information
+                5. Multiple toosl working together - List multiple functions in tools parameter
+            - Key pattern to follow when writing custom tools
+                ```python
+                    def your_tool(params) -> dict:
+                        """Your docstring."""
+
+                        # Validate input
+                        if validation_fails:
+                            return {
+                                "status": "error",
+                                "error_message": "Clear explanation for the user"
+                            }
+
+                        # Perform operation
+                        try:
+                            result = do_something()
+                            return {
+                                "status": "success",
+                                "result": result,
+                                "additional_info": other_data
+                            }
+                        except Exception as e:
+                            return {
+                                "status": "error",
+                                "error_message": f"Operation failed: {str(e)}"
+                            }
+                ```
+
+
 - Built-in tools
     - Google Search: Web serach with grounding
         - **Example**: See research_assistant
