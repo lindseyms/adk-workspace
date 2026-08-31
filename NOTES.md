@@ -390,3 +390,5 @@
     - MCP servers may expose many tools, but if you only want your agent to use specific ones, use tool_filter parameter
         - Always use tool_filter in prod!
     - **Example**: See geography_assistant2
+    - Make sure to run pip install "google-adk[mcp]" before it will actually let you connect to any MCP servers! pip install "google-adk" does not install mcp related packages by default.
+    - If you're running MCP

@@ -7,8 +7,8 @@ Reference: https://google.github.io/adk-docs/tools-custom/mcp-tools/
 
 import os
 from google.adk.agents.llm_agent import Agent
-from google.adk.tools.mcp_tool import McpToolset
 from google.adk.tools.mcp_tool.mcp_session_manager import StdioConnectionParams
+from google.adk.tools.mcp_tool.mcp_toolset import McpToolset
 from mcp import StdioServerParameters
 
 # Define the folder to allow file access (must be absolute path)
@@ -40,15 +40,19 @@ root_agent = Agent(
         McpToolset(
                 connection_params=StdioConnectionParams(
                     server_params=StdioServerParameters(
-                        command='npx',
-                        args=['-y',
-                        '@modelcontextprotocol/server-filesystem',
-                        ALLOWED_PATH
+                        command='cmd',
+                        args=[
+                            '/c',
+                            'npx',
+                            '-y',
+                            '@modelcontextprotocol/server-filesystem',
+                            ALLOWED_PATH
                         ],
-                    )
+                    ),
+                    timeout=30
                 ),
                 # Filter to only expose safe, read-only tools
-                tool_filter=['list_directory', 'read_file']
+                tool_filter=['list_directory', 'read_text_file']
             )
     ],
 )
