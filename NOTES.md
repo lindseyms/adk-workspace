@@ -343,3 +343,49 @@
 
 # Todo
 1) Look up ADK agent loop and understand this
+2) Look up npx commands - what is this?
+
+# MCP
+- What is it?
+    - A universal adpater for tools
+- Two integration patterns with ADK
+    1) Using existing MCP Servers: Your ADK agent acts as an MCP client, consuming tools from external servers
+        - ADK supports connecting to MCP servers in 2 ways
+            1. StdioConnectionParams (local servers) - Launches an MCP server as a local subprocess on your machine - pass the command to run it in the args list
+                - Use this for development, testing, single user scenarios
+            2. SseConnectionParams (remote servers) - Connects to MCP server running remotely via HTTP
+                - Use for prod deployments, cloud-hosted MCP servers
+    2) Exposing ADK tools via MCP: You build an MCP server that wraps your ADK tools, making them accessible to any MCP client
+- How they work
+    1) MCP servers expose tools via the standardized MCP protocol
+    2) ADK agents connect to servers using MCPToolset
+        - The MCPToolset class can be directly added to the agent's tool list
+        - MCPToolset:
+            1. Connects to an MCP server using connection parameters
+            2. Discovers availble tools from the server automatically
+            3. Proxies tool calls from your agent to the MCP server
+            4. Returns results back to your agent
+        - How to use:
+            ```python
+                agent = Agent(
+                    model='gemini-2.5-flash',
+                    name='my_agent',
+                    instruction="Use available tools to help users.",
+                    tools=[
+                        McpToolset(
+                            connection_params=StdioConnectionParams(
+                                server_params=StdioServerParameters(
+                                    command='npx',
+                                    args=['y', '@some/mcp-server']
+                                )
+                            )
+                        )
+                    ]
+                )
+            ```
+    3) Toolsare discovered automatically, no manual registration needed
+    4) Your agent uses these tools like any other ADK tool
+- Tips:
+    - Search for MCP tools before writing custom tools
+    - MCP servers may expose many tools, but if you only want your agent to use specific ones, use tool_filter parameter
+        - Always use tool_filter in prod!
