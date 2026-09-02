@@ -576,6 +576,41 @@
             4) Deploy to Agent Engine: Container deployed to Vertex AI
             5) Return endpoint: Resource name for accessing deployed agent
             - Deployment time: ~5-10 min (first deployment)
+        - Testing deployed agents - 3 methods
+            1. Python SDKA - Use the Vertex AI Python SDK to programmatically query your deployed agent
+                ```python
+                    from google.cloud import aiplatform
+
+                    # Initialize
+                    aiplatform.init(project="my-project", location="us-central1")
+
+                    # Connect to deployed agent
+                    resource_name = "projects/.../reasoningEngines/123456789"
+                    remote_app = aiplatform.ReasoningEngine(resource_name)
+
+                    # Query agent
+                    response = remote_app.query(input="What's the weather in San Francisco?")
+                    print(response)
+                ```
+            2. Cloud Console UI
+                - https://console.cloud.google.com/vertex-ai/agents/agent-engines
+                    - Select your deployed agent
+                    - use built-in testing interface
+                    - view execution logs
+                    - monitor performance
+            3. REST API
+                ```shell
+                    # Get access token
+                    TOKEN=$(gcloud auth print-access-token)
+
+                    # Call agent endpoint
+                    curl -X POST \
+                        -H "Authorization: Bearer $TOKEN" \
+                        -H "Content-Type: application/json" \
+                        -d '{"input": "What is the weather?"}' \
+                        https:\\REGION-aiplatform.googleapis.com/v1/projects/PROJECT/locations/LOCATION/reasoningEngines/ID:query
+                ```
+        - **Example**: See weather_agent
     2. Cloud Run - Fully managed platform to run code on Google's scalable infrastructure. Supports Python, Go, and Java agents.
         - Key features:
             - Serverless containers: Automatic container generation
