@@ -507,3 +507,54 @@
     - Subtask requires specialized reasoning (not just predefined logic)
     - Different instructions needed for the subtask
     - complex workflows within the subtask
+
+## ADK Deployment solutions
+- ADK provides 2 deployment patterns to make your agents accessible online
+    1. Vertex AI Agent Engine - Fully managed Google Cloud service enabling developers to deploy, manage, and scale AI agents in prod. It handles infrastruction to scale agents in prod so developers can focus on creating intelligent applications.
+        - Key features:
+            - One command deployment: adk deploy agent-engine
+            - Fully managed: Google handles infrastructure, scaling, persistence
+            - ADK-native: Built specifically for ADK agents
+            - Automatic session service: VertextAISessionService configured automatically
+            - Python only
+        - Deployment command
+            ```shell
+                adk deploy agent-engine --project=my-gcp-project --region=us-central1 --staging_bucket=gs://my-bucket --display_name="My Agent" /path/to/agent
+            ```
+        - What you'll get
+            - Public endpoint (accessible globally)
+            - 24/7 availability
+            - Automatic scaling
+            - Persistent session state (VertexAiSessionService)
+            - Memory Bank support
+            - Managed infrastructure
+        - Use Vertex AI Agent Engine when:
+            1) Building standard ADK Python Agents
+            2) Want simples deployment (one command)
+            3) Need automatic session and memory services
+            4) Dont need custom container control
+            5) Prefer fully managed infrastructure
+    2. Cloud Run - Fully managed platform to run code on Google's scalable infrastructure. Supports Python, Go, and Java agents.
+        - Key features:
+            - Serverless containers: Automatic container generation
+            - Multi-language support: Python, Go, Java
+            - Web UI option: --with_ui flag deploys interactive interface
+            - Flexible: Custom containers, fine-grained control
+            - Pay-per-use: Only charged when agent is running
+        - Deployment command
+            ```shell
+                adk deploy cloud_run --project=my-gcp-project --region=us-central1 --service_name=my_agent --with_ui /path/to/agent
+            ```
+        - What you get
+            - Public HTTPS URL (e.g., https://my-agent-xyz.us-central1.run.app)
+            - 24/7 availability
+            - Automatic scaling
+            - Web UI (with --with_ui flag)
+            - REST API for programmatic access
+            - Multi-language support
+        - Use Cloud Run when:
+            1) Need multi-languge support (Go, Java)
+            2) Want web UI deployed with agent (--with_ui)
+            3) Require custom container dependencies
+            4) Have exising Cloud run
+            5) Need fine-grained scaling/resource control   
