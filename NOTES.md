@@ -548,6 +548,16 @@
             3) Need automatic session and memory services
             4) Dont need custom container control
             5) Prefer fully managed infrastructure
+        - What gets deployed
+            1) Your ADK agent code
+            2) Dependencies from requirements.txt
+            3) ADK runtime libraries
+            4) VertexAiSessionService (automatic session persistence)
+            5) Container (auto-generated)
+            6) Scaling infrastructure (managed)
+        - What does not get deployed
+            - adk web UI (use Cloud Console or SDK instead)
+            - local development tools
     2. Cloud Run - Fully managed platform to run code on Google's scalable infrastructure. Supports Python, Go, and Java agents.
         - Key features:
             - Serverless containers: Automatic container generation
