@@ -521,6 +521,20 @@
             ```shell
                 adk deploy agent-engine --project=my-gcp-project --region=us-central1 --staging_bucket=gs://my-bucket --display_name="My Agent" /path/to/agent
             ```
+        - Setup verification before deployment is possible
+            ```shell
+                # 1. gcloud authenticated
+                gcloud auth list
+                # 2. project set
+                gcloud config get-value project
+                # 3. Billing enabled
+                gcloud beta billing projects describe adk-deployment-course | grep billingEnabled
+                # 4. APIs enabled
+                gcloud services list --enabled | grep -E "aiplatform|run"
+                # 5. Vertex AI SDK installed
+                python -c "from google.cloud import aiplatform; print('Vertex AI SDK ready')"
+            ```
+            - https://www.skills.google/paths/3802/course_templates/1639/documents/646419 for more setup/installation information
         - What you'll get
             - Public endpoint (accessible globally)
             - 24/7 availability
