@@ -19,7 +19,7 @@
     - cd adk-workspace
 3. Create a virtual environment & activate it
     - python -m venv .venv
-    - source .venv/bin/activate (Linux) OR .venv\Scripts\Activate.ps1 (Powershell) OR .venv\Scripts\activate.bat (Command Prompt)
+    - source .venv/bin/activate (Linux) OR source .venv/Scripts/activate (bash) OR .venv\Scripts\Activate.ps1 (Powershell) OR .venv\Scripts\activate.bat (Command Prompt)
 4. Install ADK within virtual environment
     - pip install google-adk
         - this installs:
