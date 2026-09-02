@@ -519,7 +519,18 @@
             - Python only
         - Deployment command
             ```shell
-                adk deploy agent-engine --project=my-gcp-project --region=us-central1 --staging_bucket=gs://my-bucket --display_name="My Agent" /path/to/agent
+                adk deploy agent-engine \
+                --project=my-gcp-project \  # Google Cloud project ID
+                --region=us-central1 \      # Deployment region
+                --staging_bucket=gs://my-bucket \   # Google Cloud Storage bucket for staging code - Code will be uplaoded here
+                --display_name="My Agent" \ # Human readable agent name
+                /path/to/agent  # Directory containing agent.py with root_agent
+                """
+                Optional parameters
+                --requirements: Path to requiremetns.txt (defaults to requirements.txt in agent directly)
+                --enable_tracing: Enable detailed tracing (True or False)
+                --description: Agent description
+                """
             ```
         - Setup verification before deployment is possible
             ```shell
@@ -558,6 +569,13 @@
         - What does not get deployed
             - adk web UI (use Cloud Console or SDK instead)
             - local development tools
+        - What happnes during deployment:
+            1) Package agent code: ADK bundles your agent.py and dependencies
+            2) Upload to staging bucket: Code uploaded to Google Cloud Storage
+            3) Build container image: ADK creates contianer automatically
+            4) Deploy to Agent Engine: Container deployed to Vertex AI
+            5) Return endpoint: Resource name for accessing deployed agent
+            - Deployment time: ~5-10 min (first deployment)
     2. Cloud Run - Fully managed platform to run code on Google's scalable infrastructure. Supports Python, Go, and Java agents.
         - Key features:
             - Serverless containers: Automatic container generation
