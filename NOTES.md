@@ -522,7 +522,7 @@
                 adk deploy agent-engine \
                 --project=my-gcp-project \  # Google Cloud project ID
                 --region=us-central1 \      # Deployment region
-                --staging_bucket=gs://my-bucket \   # Google Cloud Storage bucket for staging code - Code will be uplaoded here
+                --staging_bucket=gs://my-bucket \   # Google Cloud Storage bucket for staging code - Code will be uplaoded here #deprecated
                 --display_name="My Agent" \ # Human readable agent name
                 /path/to/agent  # Directory containing agent.py with root_agent
                 """
