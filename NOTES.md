@@ -517,21 +517,73 @@
             - ADK-native: Built specifically for ADK agents
             - Automatic session service: VertextAISessionService configured automatically
             - Python only
-        - Deployment command
-            ```shell
-                adk deploy agent-engine \
-                --project=my-gcp-project \  # Google Cloud project ID
-                --region=us-central1 \      # Deployment region
-                --staging_bucket=gs://my-bucket \   # Google Cloud Storage bucket for staging code - Code will be uplaoded here #deprecated
-                --display_name="My Agent" \ # Human readable agent name
-                /path/to/agent  # Directory containing agent.py with root_agent
-                """
-                Optional parameters
-                --requirements: Path to requiremetns.txt (defaults to requirements.txt in agent directly)
-                --enable_tracing: Enable detailed tracing (True or False)
-                --description: Agent description
-                """
-            ```
+        - Deployment steps
+            1. Ensure you have a Google Cloud account
+            2. Install gcloud CLI and login by running below command. It will open the browser for authentication.
+                ```shell
+                    gcloud auth login
+                ```
+            3. Verify installation
+                ```shell
+                    gcloud --version
+                ```
+            4. Set the Google Cloud project you will be working in as the active project
+                ```shell
+                    gcloud config set project my-project
+                ```
+            5. verify you are in the correct project
+                ```shell
+                    gcloud config get-value project
+                ```
+            6. Enable required APIs
+                ```shell
+                    # Enable Vertex AI API (for Agent Engine)
+                    gcloud services enable aiplatform.googleapis.com
+
+                    # Enable Cloud Run API
+                    gcloud services enable run.googleapis.com
+
+                    #Verify APIs enabled
+                    gcloud services list --enabled | grep -E "aiplatform|run"
+                ```
+            7. Install Vertex AI SDK
+                ```shell
+                    pip install --upgrade google-cloud-aiplatform[adk,agent_engines]>1.111
+                
+                    # Verify installation
+                    python -c "from google.cloud import aiplatform; print(aiplatform.__version__)"
+                ```
+            8. Create your agent
+                - make sure it has a requirements.txt including the following
+                ```none
+                    google-cloud-aiplatform[adk,agent_engines]>1.111
+                ```
+                - make sure it has a .env file including the following
+                ```python
+                    GOOGLE_CLOUD_PROJECT=your-project-id
+                    GOOGLE_CLOUD_LOCATION=us-central1
+                    GOOGLE_API_KEY=your-api-key
+                ```
+            9. Deploy the agent (I left off creating the storage bucket because this is deprecated now. You should exclude that from teh command)
+                ```shell
+                    adk deploy agent-engine \
+                    --project=my-gcp-project \  # Google Cloud project ID
+                    --region=us-central1 \      # Deployment region
+                    --staging_bucket=gs://my-bucket \   # Google Cloud Storage bucket for staging code - Code will be uplaoded here #deprecated
+                    --display_name="My Agent" \ # Human readable agent name
+                    /path/to/agent  # Directory containing agent.py with root_agent
+                    """
+                    Optional parameters
+                    --requirements: Path to requiremetns.txt (defaults to requirements.txt in agent directly)
+                    --enable_tracing: Enable detailed tracing (True or False)
+                    --description: Agent description
+                    """
+                ```
+                - Errors: If the above fails Saying default credentials not found run:
+                    ```shell
+                        gcloud auth application-default login
+                    ```
+            10. Test deployed agent
         - Setup verification before deployment is possible
             ```shell
                 # 1. gcloud authenticated
